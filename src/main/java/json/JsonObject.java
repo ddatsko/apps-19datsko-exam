@@ -1,15 +1,15 @@
 package json;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Andrii_Rodionov on 1/3/2017.
  */
 public class JsonObject extends Json {
-    private ArrayList<JsonPair> pairs;
+    private LinkedHashMap<String, Json> pairs;
 
     public JsonObject(JsonPair... jsonPairs) {
-        pairs = new ArrayList<JsonPair>();
+        pairs = new LinkedHashMap<>();
         for (JsonPair pair : jsonPairs) {
             add(pair);
         }
@@ -17,12 +17,7 @@ public class JsonObject extends Json {
     }
 
     public boolean contains(String s) {
-        for (JsonPair pair: pairs) {
-            if (pair.key.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return pairs.containsKey(s);
     }
 
     @Override
@@ -33,8 +28,8 @@ public class JsonObject extends Json {
         StringBuilder s = new StringBuilder();
         s.append("{");
 
-        for (JsonPair pair : pairs) {
-            s.append(pair.toString());
+        for (String key : pairs.keySet()) {
+            s.append(new JsonPair(key, pairs.get(key)).toString());
             s.append(", ");
         }
         String res = s.toString();
@@ -44,13 +39,13 @@ public class JsonObject extends Json {
     }
 
     public void add(JsonPair jsonPair) {
-        pairs.add(jsonPair);
+        pairs.put(jsonPair.key, jsonPair.value);
     }
 
     public Json find(String name) {
-        for (JsonPair pair : pairs) {
-            if (pair.key.equals(name)) {
-                return pair.value;
+        for (String key : pairs.keySet()) {
+            if (key.equals(name)) {
+                return pairs.get(key);
             }
         }
         return null;

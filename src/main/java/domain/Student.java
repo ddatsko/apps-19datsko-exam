@@ -29,7 +29,12 @@ public class Student extends BasicStudent {
             course.add(new JsonPair("passed", new JsonBoolean(exams.get(exam) >= 3)));
             examsList.add(course);
         }
-        JsonObject[] examsArr = (JsonObject[])examsList.toArray();
+        JsonObject[] examsArr = new JsonObject[examsList.size()];
+        int counter = -1;
+        for (JsonObject o: examsList) {
+            counter++;
+            examsArr[counter] = o;
+        }
         json.add(new JsonPair("exams", new JsonArray(examsArr)));
         return json;
     }
